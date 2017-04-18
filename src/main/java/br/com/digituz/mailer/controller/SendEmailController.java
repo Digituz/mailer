@@ -36,7 +36,7 @@ public class SendEmailController {
 
 	@GetMapping("/api/get-email")
 	public List<Email> getEmails() {
-		logger.info("whatever");
+		logger.info("Emails listed");
 		return this.sendEmailService.emailsAll();
 	}
 }
