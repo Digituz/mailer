@@ -13,61 +13,61 @@ import javax.persistence.Id;
 @Entity
 public class Emails {
 
-    @Id
-    @GeneratedValue
-    private int id;
+	@Id
+	@GeneratedValue
+	private int id;
 
-    private String title;
-    private String message;
-  
-    @ElementCollection
-    private List<String> recipients;
+	private String title;
+	private String message;
 
-    public Emails() {
-    }
+	@ElementCollection
+	private List<String> recipients;
 
-    public Emails(String title, String message, List<String> recipients) {
-	super();
-	this.title = title;
-	this.message = message;
-	this.recipients = recipients;
-    }
+	public Emails() {
+	}
 
-    public List<String> getRecipients() {
-        return recipients;
-    }
+	public Emails(String title, String message, List<String> recipients) {
+		super();
+		this.title = title;
+		this.message = message;
+		this.recipients = recipients;
+	}
 
-    public void setRecipients(List<String> recipients) {
-        this.recipients = recipients;
-    }
+	public List<String> getRecipients() {
+		return recipients;
+	}
 
-    public int getId() {
-	return id;
-    }
+	public void setRecipients(List<String> recipients) {
+		this.recipients = recipients;
+	}
 
-    public void setId(int id) {
-	this.id = id;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public String getTitle() {
-	return title;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public void setTitle(String title) {
-	this.title = title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public String getMessage() {
-	return message;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    public void setMessage(String message) {
-	this.message = message;
-    }
+	public String getMessage() {
+		return message;
+	}
 
-    @Override
-    public String toString() {
-	return "Emails [id=" + id + ", title=" + title + 
-		", message=" + message + ", recipients=" + recipients + "]";
-    }
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	@Override
+	public String toString() {
+		return "Emails [id=" + id + ", title=" + title + ", message=" + message + ", recipients=" + recipients
+				+ "]";
+	}
 }
