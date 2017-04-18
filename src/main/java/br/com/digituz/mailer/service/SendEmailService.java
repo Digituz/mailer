@@ -6,6 +6,8 @@ import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -26,6 +28,8 @@ public class SendEmailService {
 	@Autowired
 	private EmailRepository emailRepository;
 
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	public void sendEmails(Email email) {
 
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -44,10 +48,10 @@ public class SendEmailService {
 			helper.setText(email.getMessage());
 
 			javaMailSender.send(mimeMessage);
-			System.out.println("Email sent!");
+			logger.info("Email sent");
 
 		} catch (MessagingException e) {
-			System.err.println(e.getMessage());
+			logger.error(e.getMessage(), e);
 		}
 		this.emailRepository.save(email);
 	}
