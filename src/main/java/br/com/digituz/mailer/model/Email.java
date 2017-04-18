@@ -14,7 +14,7 @@ import lombok.Data;
  */
 @Entity
 @Data
-public class Emails {
+public class Email {
 
 	@Id
 	@GeneratedValue

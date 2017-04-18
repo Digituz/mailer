@@ -11,8 +11,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import br.com.digituz.mailer.model.Emails;
-import br.com.digituz.mailer.repository.MailerRepository;
+import br.com.digituz.mailer.model.Email;
+import br.com.digituz.mailer.repository.EmailRepository;
 
 /**
  * @author daniel
@@ -24,24 +24,24 @@ public class SendEmailService {
 	private JavaMailSender javaMailSender;
 
 	@Autowired
-	private MailerRepository mailerRepository;
+	private EmailRepository emailRepository;
 
-	public void sendEmails(Emails emails) {
+	public void sendEmails(Email email) {
 
 		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
 		try {
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
-			InternetAddress[] address = new InternetAddress[emails.getRecipients().size()];
-			for (int i = 0; i < emails.getRecipients().size(); i++) {
-				address[i] = new InternetAddress(emails.getRecipients().get(i));
+			InternetAddress[] address = new InternetAddress[email.getRecipients().size()];
+			for (int i = 0; i < email.getRecipients().size(); i++) {
+				address[i] = new InternetAddress(email.getRecipients().get(i));
 			}
 
 			helper.setTo(address);
-			helper.setSubject(emails.getTitle());
+			helper.setSubject(email.getTitle());
 			helper.setFrom("email@example.com");
-			helper.setText(emails.getMessage());
+			helper.setText(email.getMessage());
 
 			javaMailSender.send(mimeMessage);
 			System.out.println("Email sent!");
@@ -49,10 +49,10 @@ public class SendEmailService {
 		} catch (MessagingException e) {
 			System.err.println(e.getMessage());
 		}
-		this.mailerRepository.save(emails);
+		this.emailRepository.save(email);
 	}
 
-	public List<Emails> listarTarefas() {
-		return this.mailerRepository.findAll();
+	public List<Email> emailsAll() {
+		return this.emailRepository.findAll();
 	}
 }
