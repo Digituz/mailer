@@ -18,7 +18,7 @@ public class Email {
 
 	@Id
 	@GeneratedValue
-	private int id;
+	private Long id;
 
 	private String title;
 	private String message;

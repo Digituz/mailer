@@ -9,5 +9,5 @@ import br.com.digituz.mailer.model.Email;
  * @author daniel
  */
 @Repository
-public interface EmailRepository extends JpaRepository<Email, Integer> {
+public interface EmailRepository extends JpaRepository<Email, Long> {
 }
