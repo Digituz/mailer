@@ -19,7 +19,7 @@ import br.com.digituz.mailer.repository.EmailRepository;
  * @author daniel
  */
 @Service
-public class SendEmailService {
+public class EmailService {
 
 	@Autowired
 	private JavaMailSender javaMailSender;

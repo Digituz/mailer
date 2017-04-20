@@ -15,19 +15,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.digituz.mailer.model.Email;
 import br.com.digituz.mailer.model.Message;
-import br.com.digituz.mailer.service.SendEmailService;
+import br.com.digituz.mailer.service.EmailService;
 
 /**
  * @author daniel
  */
 @RestController
 @RequestMapping("/api")
-public class SendEmailController {
+public class EmailController {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private SendEmailService sendEmailService;
+	private EmailService sendEmailService;
 
 	@PostMapping("/send-email")
 	@ResponseStatus(value = HttpStatus.OK)
