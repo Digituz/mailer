@@ -3,7 +3,6 @@ package br.com.digituz.mailer.service;
 import java.util.List;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.slf4j.Logger;
@@ -37,12 +36,12 @@ public class SendEmailService {
 		try {
 			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
-			InternetAddress[] address = new InternetAddress[email.getRecipients().size()];
-			for (int i = 0; i < email.getRecipients().size(); i++) {
-				address[i] = new InternetAddress(email.getRecipients().get(i));
-			}
+			String[] recipients = email.getRecipients()
+					.stream()
+					.map(String::new)
+					.toArray(String[]::new);
 
-			helper.setTo(address);
+			helper.setTo(recipients);
 			helper.setSubject(email.getTitle());
 			helper.setFrom("email@example.com");
 			helper.setText(email.getMessage());

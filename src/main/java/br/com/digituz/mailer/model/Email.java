@@ -1,6 +1,6 @@
 package br.com.digituz.mailer.model;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -25,5 +25,5 @@ public class Email {
 	private String message;
 
 	@ElementCollection
-	private List<String> recipients;
+	private Set<String> recipients;
 }
