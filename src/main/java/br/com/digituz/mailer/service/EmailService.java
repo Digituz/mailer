@@ -1,6 +1,8 @@
 package br.com.digituz.mailer.service;
 
+import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -8,7 +10,7 @@ import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +24,7 @@ import br.com.digituz.mailer.repository.EmailRepository;
 public class EmailService {
 
 	@Autowired
-	private JavaMailSender javaMailSender;
+	private JavaMailSenderImpl javaMailSender;
 
 	@Autowired
 	private EmailRepository emailRepository;
@@ -43,8 +45,16 @@ public class EmailService {
 
 			helper.setTo(recipients);
 			helper.setSubject(email.getTitle());
-			helper.setFrom("email@example.com");
 			helper.setText(email.getMessage());
+			helper.setFrom("email@example.com.br");
+
+			File fileAttachment = new File("pathAttachment");
+			email.setAttachment(fileAttachment);
+			Optional<File> attachment = Optional.ofNullable(email.getAttachment());
+
+			if (attachment.isPresent()) {
+				helper.addAttachment("attachmentFilename", attachment.get());
+			}
 
 			javaMailSender.send(mimeMessage);
 			logger.info("Email sent");
