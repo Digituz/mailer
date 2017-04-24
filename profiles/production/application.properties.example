@@ -1,0 +1,12 @@
+# application props
+mailer.replyTo=someone@example.com
+
+# smtp authentication
+spring.mail.host=smtp.example.com
+spring.mail.username=some-email-username
+spring.mail.password=some-email-password
+
+# database configuration
+spring.datasource.url=jdbc:postgresql://db-host:db-port/db-name
+spring.datasource.username=db-username
+spring.datasource.password=db-password

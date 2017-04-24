@@ -1,5 +1,14 @@
+# ignoring local properties
+profiles/development/application.properties
+profiles/production/application.properties
+
+# resorces
 /target/
 *.class
+
+# IntelliJ Idea files
+*.iml
+.idea/
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
