@@ -27,13 +27,16 @@ informando as informações do `provedor de email` e as de conexão com o `banco
 - Com o `curl` que é um termimal para transferir dados para varios protocolos.
 - Para testar o POST passamos as seguinte informações no terminal:
 
-	curl -H "Content-Type: application/json" -X POST -d 
-    '{ "title":"Olá Mundo !",
-       "message":"Meu Primeiro Email.",
-       "recipients":["example@example.com","example@example.com.br"]
-    }'  http://localhost:8080/api/send-email 
+```bash
+curl -H "Content-Type: application/json" -X POST -d
+'{ "title":"Olá Mundo !",
+   "message":"Meu Primeiro Email.",
+   "recipients":["example@example.com","example@example.com.br"]
+}'  http://localhost:8080/api/send-email
+```
 
 - Para testar o GET usamos o seguinte comando para listar os dados:
 
+```bash
 	curl -H "Content-Type: application/json" -X GET http://localhost:8080/api/get-email    
-
+```bash
