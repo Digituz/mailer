@@ -1,3 +1,8 @@
+# ignoring local properties
+profiles/development/application.properties
+profiles/production/application.properties
+
+# resorces
 /target/
 *.class
 

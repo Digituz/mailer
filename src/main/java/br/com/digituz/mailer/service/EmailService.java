@@ -1,21 +1,18 @@
 package br.com.digituz.mailer.service;
 
-import java.io.File;
-import java.util.List;
-import java.util.Optional;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
+import br.com.digituz.mailer.model.Email;
+import br.com.digituz.mailer.repository.EmailRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import br.com.digituz.mailer.model.Email;
-import br.com.digituz.mailer.repository.EmailRepository;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.util.List;
 
 /**
  * @author daniel
@@ -28,6 +25,12 @@ public class EmailService {
 
 	@Autowired
 	private EmailRepository emailRepository;
+
+	@Value("${spring.mail.username}")
+	private String sender;
+
+	@Value("${mailer.replyTo}")
+	private String replyTo;
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -43,18 +46,11 @@ public class EmailService {
 					.map(String::new)
 					.toArray(String[]::new);
 
+			helper.setFrom(sender);
 			helper.setTo(recipients);
 			helper.setSubject(email.getTitle());
 			helper.setText(email.getMessage());
-			helper.setFrom("email@example.com.br");
-
-			File fileAttachment = new File("pathAttachment");
-			email.setAttachment(fileAttachment);
-			Optional<File> attachment = Optional.ofNullable(email.getAttachment());
-
-			if (attachment.isPresent()) {
-				helper.addAttachment("attachmentFilename", attachment.get());
-			}
+			helper.setReplyTo(replyTo);
 
 			javaMailSender.send(mimeMessage);
 			logger.info("Email sent");
