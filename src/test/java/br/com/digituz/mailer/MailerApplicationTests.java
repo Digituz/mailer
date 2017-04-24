@@ -12,5 +12,4 @@ public class MailerApplicationTests {
 	@Test
 	public void contextLoads() {
 	}
-
 }
