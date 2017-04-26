@@ -1,1 +1,0 @@
-create index idx_recipients on email_recipients (email_id);

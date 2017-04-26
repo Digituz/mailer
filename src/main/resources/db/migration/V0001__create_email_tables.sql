@@ -12,3 +12,12 @@ create table email_recipients
   CONSTRAINT email_recipients_fk FOREIGN KEY (email_id) 
   REFERENCES email (id)
 );
+
+create table email_attachment
+(
+  email_id bigserial not null,
+  filename varchar (255),
+  data varchar (255),
+  CONSTRAINT email_attachment_fk FOREIGN KEY (email_id) 
+  REFERENCES email (id)
+);
