@@ -1,1 +1,0 @@
-alter table email add attachment bytea;
