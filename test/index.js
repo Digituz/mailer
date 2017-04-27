@@ -11,8 +11,8 @@ let email = {
 	title: "Test sending email",
 	message: "Hi, this is a test",
 	recipients: [
-		"krebs.bruno@gmail.com",
-		"krebs.bruno.sp@gmail.com"
+		"bruno@spam4.me",
+		"bruno2@spam4.me"
 	],
 	attachments: [
 		{ filename: "kitty.png", data: base64Encode('./kitty.png') }
