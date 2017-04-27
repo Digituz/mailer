@@ -1,31 +1,37 @@
 # Mailer
-Mailer é um microserviço para lidar com o processo de envio de e-mails
 
-Basicamente esté microserviço captura os parametros passados por uma requisão POST informando as seguintes informações :
+Mailer is a microservice that deals with the process of sending email messages. Its goals is to tkae out the burden of the client, assuring that the message will be delivered. That is, the client asks Mailer to send a message, Mailer saves this message in the database and tries to send it. In case there is a problem with the process of sending this message, Mailer waits a few minutes and tries again.
 
- * Os destinatários
- * O título do email
- * O corpo do email 
+In the meanwhile, the client can keep going with its normal flow, knowing that Mailer will deliver it (i.e. if the recipient address exists).
+
+To send an email message through Mailer, the client has to issue a `POST` request to `/api/email` with the following `JSON` structure:
+
+```json
+{
+    "title":"Hello World",
+    "message":"This is a message sent through Mailer",
+    "recipients": [
+        "example@example.com",
+        "example@example.com.br"
+    ],
+    "attachments": [
+        {
+            "filename": "some-file.png",
+            "data": "ASDAHSDASDASDAHSASDH" // base64 encoded binary data
+        }
+    ]
+}
+```
+
+To run the application, do the following:
+
+- Create a `mailer` database on a PostgreSQL instance
+- Make a copy of `/profile/${environment}/application.properties.example`, removing the `.example` suffix, and replace the key-values appropriately.
 
 
-Antes de executar, a aplicação deve ser configurada da seguinte maneira:
+## Testing Mailer Manually
 
-- Criar um banco de dados no Postgresql chamado `mailer`.
-- Alterar o arquivo `application.properties` que fica dentro `src/main/resources`,
-informando as informações do `provedor de email` e as de conexão com o `banco de dados``.
-- Informar o email que será usado para enviar para os destinatários na classe `EmailService.java` no seguinte trecho `helper.setFrom("email@example.com");`  que está localizado no pacote : `br.com.digituz.mailer.service`.
-- Execute a classe `MailerApplication.java` localizada no pacote `br.com.digituz.mailer`
-- Após a execução a aplicação ira criar `2 tabelas` no banco de dado chamada `email` e `email_recipients` através do FlyWayDB.
-
-
-### Os recursos disponíveis:
-
-* **GET**  http://localhost:8080/api/get-email 
-* **POST** http://localhost:8080/api/send-email
-
-### Testando os recursos:
-- Com o `curl` que é um termimal para transferir dados para varios protocolos.
-- Para testar o POST passamos as seguinte informações no terminal:
+To send an email message through Mailer, issue a `curl` command as follows:
 
 ```bash
 curl -H "Content-Type: application/json" -X POST -d
@@ -34,9 +40,3 @@ curl -H "Content-Type: application/json" -X POST -d
    "recipients":["example@example.com","example@example.com.br"]
 }'  http://localhost:8080/api/send-email
 ```
-
-- Para testar o GET usamos o seguinte comando para listar os dados:
-
-```bash
-	curl -H "Content-Type: application/json" -X GET http://localhost:8080/api/get-email    
-```bash

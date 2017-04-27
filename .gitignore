@@ -2,9 +2,10 @@
 profiles/development/application.properties
 profiles/production/application.properties
 
-# resorces
+# resources
 /target/
 *.class
+/test/node_modules/
 
 # IntelliJ Idea files
 *.iml
