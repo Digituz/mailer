@@ -1,11 +1,13 @@
 package br.com.digituz.mailer.service;
 
+import br.com.digituz.mailer.model.Attachment;
 import br.com.digituz.mailer.model.Email;
 import br.com.digituz.mailer.repository.EmailRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -52,13 +54,18 @@ public class EmailService {
 			helper.setText(email.getMessage());
 			helper.setReplyTo(replyTo);
 
+			for (Attachment attachment : email.getAttachments()) {
+				helper.addAttachment(attachment.getFilename(), new ByteArrayResource(attachment.getData()));
+			}
+
 			javaMailSender.send(mimeMessage);
 			logger.info("Email sent");
+
+			this.emailRepository.save(email);
 
 		} catch (MessagingException e) {
 			logger.error(e.getMessage(), e);
 		}
-		this.emailRepository.save(email);
 	}
 
 	public List<Email> emailsAll() {

@@ -1,7 +1,8 @@
 package br.com.digituz.mailer.controller;
 
-import java.util.List;
-
+import br.com.digituz.mailer.model.Email;
+import br.com.digituz.mailer.model.Message;
+import br.com.digituz.mailer.service.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.digituz.mailer.model.Email;
-import br.com.digituz.mailer.model.Message;
-import br.com.digituz.mailer.service.EmailService;
+import java.util.List;
 
 /**
  * @author daniel
@@ -23,20 +22,19 @@ import br.com.digituz.mailer.service.EmailService;
 @RestController
 @RequestMapping("/api")
 public class EmailController {
-
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static final Logger logger = LoggerFactory.getLogger(EmailController.class);
 
 	@Autowired
 	private EmailService sendEmailService;
 
-	@PostMapping("/send-email")
+	@PostMapping("/email")
 	@ResponseStatus(value = HttpStatus.OK)
-	public Message sendEmails(@RequestBody Email email) {
-		this.sendEmailService.sendEmails(email);
+	public Message sendEmails(@RequestBody EmailTO email) {
+		this.sendEmailService.sendEmails(email.toEmail());
 		return new Message("Information successfully received.");
 	}
 
-	@GetMapping("/get-email")
+	@GetMapping("/email")
 	public List<Email> getEmails() {
 		logger.info("Emails listed");
 		return this.sendEmailService.emailsAll();
