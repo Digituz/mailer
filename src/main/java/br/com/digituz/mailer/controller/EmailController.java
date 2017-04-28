@@ -1,8 +1,9 @@
 package br.com.digituz.mailer.controller;
 
-import br.com.digituz.mailer.model.Email;
-import br.com.digituz.mailer.model.Message;
-import br.com.digituz.mailer.service.EmailService;
+import java.util.List;
+
+import javax.mail.MessagingException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import br.com.digituz.mailer.model.Email;
+import br.com.digituz.mailer.model.Message;
+import br.com.digituz.mailer.service.EmailService;
 
 /**
  * @author daniel
@@ -29,8 +32,8 @@ public class EmailController {
 
 	@PostMapping("/email")
 	@ResponseStatus(value = HttpStatus.OK)
-	public Message sendEmails(@RequestBody EmailTO email) {
-		this.sendEmailService.sendEmails(email.toEmail());
+	public Message sendEmails(@RequestBody EmailTO email) throws MessagingException {
+		this.sendEmailService.saveEmails(email.toEmail());
 		return new Message("Information successfully received.");
 	}
 
