@@ -2,8 +2,6 @@ package br.com.digituz.mailer.controller;
 
 import java.util.List;
 
-import javax.mail.MessagingException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,18 +26,18 @@ public class EmailController {
 	private static final Logger logger = LoggerFactory.getLogger(EmailController.class);
 
 	@Autowired
-	private EmailService sendEmailService;
+	private EmailService emailService;
 
 	@PostMapping("/email")
 	@ResponseStatus(value = HttpStatus.OK)
-	public Message sendEmails(@RequestBody EmailTO email) throws MessagingException {
-		this.sendEmailService.saveEmails(email.toEmail());
+	public Message sendEmails(@RequestBody EmailTO email) {
+		emailService.saveEmails(email.toEmail());
 		return new Message("Information successfully received.");
 	}
 
 	@GetMapping("/email")
 	public List<Email> getEmails() {
 		logger.info("Emails listed");
-		return this.sendEmailService.emailsAll();
+		return emailService.emailsAll();
 	}
 }
