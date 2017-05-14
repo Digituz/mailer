@@ -1,6 +1,7 @@
 package br.com.digituz.mailer.model;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -12,9 +13,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import lombok.Getter;
 
@@ -38,20 +36,18 @@ public class Email {
 	private EmailStatus emailStatus = EmailStatus.NEW;
 
 	@ElementCollection
-	@LazyCollection(LazyCollectionOption.FALSE)
 	@CollectionTable(
 			name = "attachment",
 			joinColumns = @JoinColumn(name = "email_id")
 	)
-	private List<Attachment> attachments;
+	private Set<Attachment> attachments;
 
 	@ElementCollection
-	@LazyCollection(LazyCollectionOption.FALSE)
 	private List<String> recipients;
 
 	protected Email() { }
 
-	public Email(String title, String message, List<Attachment> attachments, List<String> recipients) {
+	public Email(String title, String message,Set<Attachment> attachments, List<String> recipients) {
 		this.title = title;
 		this.message = message;
 		this.attachments = attachments;

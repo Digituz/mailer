@@ -1,5 +1,6 @@
 package br.com.digituz.mailer.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -50,35 +51,30 @@ public class EmailService {
 
 		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
-		emailsAll()
-		.stream()
-		.filter(mail -> EmailStatus.NEW.equals(mail.getEmailStatus()))
-		.forEach(mail -> {
-			String[] recipients = mail.getRecipients()
+		List<Email> emails = this.emailRepository.getUnsentEmails(Arrays.asList(EmailStatus.NEW, EmailStatus.ERROR));
+
+		emails.forEach(s -> {
+			String[] recipients = s.getRecipients()
 					.stream()
 					.map(String::new)
 					.toArray(String[]::new);
+
 			try {
+				helper.setText(s.getMessage());
 				helper.setFrom(sender);
-
 				helper.setTo(recipients);
-
-				helper.setSubject(mail.getTitle());
-				helper.setText(mail.getMessage());
+				helper.setSubject(s.getTitle());
 				helper.setReplyTo(replyTo);
-
-				for (Attachment attachment : mail.getAttachments()) {
-					helper.addAttachment(attachment.getFilename(),
-							new ByteArrayResource(attachment.getData()));
+				
+				for (Attachment attachment : s.getAttachments()) {
+					helper.addAttachment(attachment.getFilename(), new ByteArrayResource(attachment.getData()));
 				}
-
 			} catch (MessagingException e) {
 				logger.error(e.getMessage(), e);
 			}
 		});
-
+		
 		javaMailSender.send(mimeMessage);
-		logger.info("Email sent");
 	}
 
 	public List<Email> emailsAll() {
