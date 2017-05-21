@@ -1,8 +1,8 @@
 package br.com.digituz.mailer.model;
 
-import lombok.Getter;
-
 import javax.persistence.Embeddable;
+
+import lombok.Getter;
 
 @Embeddable
 @Getter

@@ -1,25 +1,26 @@
 package br.com.digituz.mailer.controller;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import br.com.digituz.mailer.model.Attachment;
 import br.com.digituz.mailer.model.Email;
 import lombok.Data;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
 class EmailTO {
 	private String title;
 	private String message;
-	private List<AttachmentTO> attachments;
+	private Set<AttachmentTO> attachments;
 	private List<String> recipients;
 
 	Email toEmail() {
-		List<Attachment> attachs = null;
+		Set<Attachment> attachs = null;
 		if (attachments != null) {
 			attachs = attachments.stream()
 					.map(AttachmentTO::toAttachment)
-					.collect(Collectors.toList());
+					.collect(Collectors.toSet());
 		}
 		return new Email(title, message, attachs, recipients);
 	}

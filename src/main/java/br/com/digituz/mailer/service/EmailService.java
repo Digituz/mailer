@@ -1,8 +1,11 @@
 package br.com.digituz.mailer.service;
 
-import br.com.digituz.mailer.model.Attachment;
-import br.com.digituz.mailer.model.Email;
-import br.com.digituz.mailer.repository.EmailRepository;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +15,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import java.util.List;
+import br.com.digituz.mailer.model.Attachment;
+import br.com.digituz.mailer.model.Email;
+import br.com.digituz.mailer.model.EmailStatus;
+import br.com.digituz.mailer.repository.EmailRepository;
 
 /**
  * @author daniel
@@ -23,10 +27,10 @@ import java.util.List;
 public class EmailService {
 
 	@Autowired
-	private JavaMailSender javaMailSender;
+	private EmailRepository emailRepository;
 
 	@Autowired
-	private EmailRepository emailRepository;
+	private JavaMailSender javaMailSender;
 
 	@Value("${spring.mail.username}")
 	private String sender;
@@ -36,36 +40,41 @@ public class EmailService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	public void sendEmails(Email email) {
+	public void saveEmails(Email email) {
+		this.emailRepository.save(email);
+		logger.info("Email saved");
+	}
 
-		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+	public void sendEmails() throws MessagingException {
 
-		try {
-			MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+		List<Email> emails = this.emailRepository.getUnsentEmails(Arrays.asList(EmailStatus.NEW, EmailStatus.ERROR));
 
-			String[] recipients = email.getRecipients()
-					.stream()
-					.map(String::new)
-					.toArray(String[]::new);
+		emails.forEach(s -> {
+			try {
+				MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
-			helper.setFrom(sender);
-			helper.setTo(recipients);
-			helper.setSubject(email.getTitle());
-			helper.setText(email.getMessage());
-			helper.setReplyTo(replyTo);
+				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
-			for (Attachment attachment : email.getAttachments()) {
-				helper.addAttachment(attachment.getFilename(), new ByteArrayResource(attachment.getData()));
+				String[] recipients = s.getRecipients().stream().map(String::new).toArray(String[]::new);
+
+				helper.setText(s.getMessage());
+				helper.setFrom(sender);
+				helper.setTo(recipients);
+				helper.setSubject(s.getTitle());
+				helper.setReplyTo(replyTo);
+
+				for (Attachment attachment : s.getAttachments()) {
+					helper.addAttachment(attachment.getFilename(), new ByteArrayResource(attachment.getData()));
+				}
+
+				javaMailSender.send(mimeMessage);
+				
+			} catch (MessagingException e) {
+				logger.error(e.getMessage(), e);
 			}
 
-			javaMailSender.send(mimeMessage);
-			logger.info("Email sent");
+		});
 
-			this.emailRepository.save(email);
-
-		} catch (MessagingException e) {
-			logger.error(e.getMessage(), e);
-		}
 	}
 
 	public List<Email> emailsAll() {
