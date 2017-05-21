@@ -19,7 +19,7 @@ public class ScheduledService {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	@Scheduled(cron = "*/1000 * * * * *")
+	@Scheduled(cron = "* */5 * * * *")
 	public void sendEmails() throws MessagingException {
 
 		emailService.sendEmails();

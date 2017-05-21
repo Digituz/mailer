@@ -47,34 +47,34 @@ public class EmailService {
 
 	public void sendEmails() throws MessagingException {
 
-		MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-
-		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-
 		List<Email> emails = this.emailRepository.getUnsentEmails(Arrays.asList(EmailStatus.NEW, EmailStatus.ERROR));
 
 		emails.forEach(s -> {
-			String[] recipients = s.getRecipients()
-					.stream()
-					.map(String::new)
-					.toArray(String[]::new);
-
 			try {
+				MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+
+				MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+
+				String[] recipients = s.getRecipients().stream().map(String::new).toArray(String[]::new);
+
 				helper.setText(s.getMessage());
 				helper.setFrom(sender);
 				helper.setTo(recipients);
 				helper.setSubject(s.getTitle());
 				helper.setReplyTo(replyTo);
-				
+
 				for (Attachment attachment : s.getAttachments()) {
 					helper.addAttachment(attachment.getFilename(), new ByteArrayResource(attachment.getData()));
 				}
+
+				javaMailSender.send(mimeMessage);
+				
 			} catch (MessagingException e) {
 				logger.error(e.getMessage(), e);
 			}
+
 		});
-		
-		javaMailSender.send(mimeMessage);
+
 	}
 
 	public List<Email> emailsAll() {
